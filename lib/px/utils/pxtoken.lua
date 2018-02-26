@@ -9,4 +9,11 @@ function PXToken:new(t)
     return t
 end
 
+function PXToken:process()
+    cookie = ngx.ctx.px_orig_cookie
+    if not cookie then
+        error({ message = "no_cookie" })
+    end
+end
+
 return PXToken

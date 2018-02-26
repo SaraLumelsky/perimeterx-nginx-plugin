@@ -160,11 +160,11 @@ function M.application(file_name)
     px_payload:load(config_file)
     px_cookie = px_payload:get_payload()
     px_cookie:load(config_file)
-
+    
     local success, result = pcall(px_cookie.process, px_cookie)
     -- cookie verification passed - checking result.
     if success then
-        px_logger.debug("Cookie evaluation ended successfully, risk score: " .. ngx.ctx.block_score)
+        px_logger.debug("Cookie evaluation ended successfully, action: " .. ngx.ctx.px_action)
         details["px_cookie"] = ngx.ctx.px_cookie;
         details["px_cookie_hmac"] = ngx.ctx.px_cookie_hmac;
         details["px_cookie_version"] = ngx.ctx.px_cookie_version;
@@ -173,7 +173,7 @@ function M.application(file_name)
         px_logger.enrich_log('pxcookiets', ngx.ctx.cookie_timestamp)
         -- score crossed threshold
         if result == false then
-            ngx.ctx.block_reason = 'cookie_high_score'
+            ngx.ctx.block_reason = 'cookie_action_' .. ngx.ctx.px_action--'cookie_high_score'
             return px_block.block(ngx.ctx.block_reason)
         else
             ngx.ctx.pass_reason = 'cookie'

@@ -27,8 +27,10 @@ function PXPayload:load(config_file)
     self.cookie_secret = self.px_config.cookie_secret
     self.cookie_v3 = require "px.utils.pxcookiev3"
     self.cookie_v1 = require "px.utils.pxcookiev1"
+    self.pxcookie = require "px.utils.pxcookie"
     self.token_v3 = require "px.utils.pxtokenv3"
     self.token_v1 = require "px.utils.pxtokenv1"
+    self.pxtoken = require "px.utils.pxtoken"
 
     -- localized modules
     self.cjson = require "cjson"
@@ -51,21 +53,25 @@ function PXPayload:get_payload()
             ngx.ctx.px_cookie_version = "v3";
             self.px_logger.debug("Token V3 found - Evaluating")
             return self.token_v3:new{}
-        else
+        elseif version == "1" then
             ngx.ctx.px_cookie_version = "v1";
             self.px_logger.debug("Token V1 found - Evaluating")
             return self.token_v1:new{}
+        else 
+            return self.pxtoken:new{}
         end
     elseif ngx.var.cookie__px3 then
         ngx.ctx.px_orig_cookie = ngx.var.cookie__px3
         ngx.ctx.px_cookie_version = "v3";
         self.px_logger.debug("Cookie V3 found - Evaluating")
         return self.cookie_v3:new{}
-    else
+    elseif ngx.var.cookie__px then
         ngx.ctx.px_orig_cookie = ngx.var.cookie__px
         ngx.ctx.px_cookie_version = "v1";
         self.px_logger.debug("Cookie V1 found - Evaluating")
         return self.cookie_v1:new{}
+    else 
+        return self.pxcookie:new{}
     end
     -- check for cookie, and if found return the right object
     self.px_logger.debug("Cookie is missing")

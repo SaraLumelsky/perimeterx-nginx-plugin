@@ -27,7 +27,7 @@ function _M.get_configuration(config_file)
     if config.ssl_enabled == true then
         local session, err = httpc:ssl_handshake()
         if not session then
-            px_logger.error("HTTPC SSL handshare error: " .. err)
+            px_logger.error("HTTPC SSL handshake error: " .. err)
         end
     end
     local res, err = httpc:request({

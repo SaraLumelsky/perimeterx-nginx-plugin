@@ -9,4 +9,11 @@ function PXCookie:new(t)
     return t
 end
 
+function PXCookie:process()
+    cookie = ngx.ctx.px_orig_cookie
+    if not cookie then
+        error({ message = "no_cookie" })
+    end
+end
+
 return PXCookie

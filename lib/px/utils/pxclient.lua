@@ -45,7 +45,7 @@ function M.load(config_file)
         if ssl_enabled == true then
             local session, err = httpc:ssl_handshake()
             if not session then
-                px_logger.error("HTTPC SSL handshare error: " .. err)
+                px_logger.error("HTTPC SSL handshake error: " .. err)
             end
         end
         -- Perform the HTTP requeset
@@ -195,7 +195,7 @@ function M.load(config_file)
             if ssl_enabled == true then
                 local session, err = httpc:ssl_handshake()
                 if not session then
-                    px_logger.error("HTTPC SSL handshare error: " .. err)
+                    px_logger.error("HTTPC SSL handshake error: " .. err)
                 end
             end
         end

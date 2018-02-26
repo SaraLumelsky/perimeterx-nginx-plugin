@@ -16,6 +16,7 @@ function M.load(config_file)
     local px_debug = px_config.px_debug
     local ngx_req_get_method = ngx.req.get_method
     local ngx_req_http_version = ngx.req.http_version
+    local ngx_ctx = ngx.ctx
     -- new_request_object --
     -- takes no arguments
     -- returns table
@@ -67,25 +68,25 @@ function M.load(config_file)
         -- Set the pxscore var for logging
         px_logger.enrich_log('pxscore',data.score)
 
-        ngx.ctx.uuid = data.uuid or nil
-        ngx.ctx.block_score = data.score
-        ngx.ctx.px_action = data.action
+        ngx_ctx.uuid = data.uuid or nil
+        ngx_ctx.block_score = data.score
+        ngx_ctx.px_action = data['do']
 
-        if data.action == 'j' and data.action_data and data.action_data.body then
-            ngx.ctx.px_action_data = data.action_data.body
-            ngx.ctx.block_reason = "challenge"
-        elseif data.action == 'r' then
+        if ngx_ctx.px_action == 'j' and data.action_data and data.action_data.body then
+            ngx_ctx.px_action_data = data.action_data.body
+            ngx_ctx.block_reason = "challenge"
+        elseif ngx_ctx.px_action == 'r' then
             ngx.ctx.block_reason = 'exceeded_rate_limit'
         end
 
-        if data.score >= px_config.blocking_score then
-            if data.action == "c" or data.action == "b" then
-                ngx.ctx.block_reason = 's2s_high_score'
+        if ngx_ctx.px_action ~= "p" then
+            if ngx_ctx.px_action == "c" or ngx_ctx.px_action == "b" then
+                px_logger.debug("Block reason - risk action: " .. ngx_ctx.px_action)
+                ngx.ctx.block_reason = 's2s_action_' .. ngx_ctx.px_action
             end
-
-            px_logger.debug("Block reason - non human score: " .. data.score)
             return false
         end
+
         return true
     end
 
@@ -112,7 +113,7 @@ function M.load(config_file)
         if ssl_enabled == true then
             local session, err = httpc:ssl_handshake()
             if not session then
-                px_logger.debug("HTTPC SSL handshare error: " .. err)
+                px_logger.debug("HTTPC SSL handshake error: " .. err)
             end
         end
         -- Perform the HTTP requeset

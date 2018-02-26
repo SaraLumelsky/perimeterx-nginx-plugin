@@ -62,8 +62,11 @@ function TokenV3:process()
     if fields.v then
         ngx.ctx.vid = fields.v
     end
-    if fields.a then
-        ngx.ctx.px_action = fields.a
+    -- if fields.a then
+    --     ngx.ctx.px_action = fields.a
+    -- end
+    if fields['do'] then
+        ngx.ctx.px_action = fields['do']
     end
 
     -- cookie expired
@@ -81,8 +84,8 @@ function TokenV3:process()
           ngx.ctx.block_score = fields.s
       end
 
-    if fields.s >= self.blocking_score then
-        self.px_logger.debug("Visitor score is higher than allowed threshold: " .. fields.s)
+    if ngx.ctx.px_action ~= "p" then
+        -- self.px_logger.debug("Visitor score is higher than allowed threshold: " .. fields.s)
         return false
     end
 
