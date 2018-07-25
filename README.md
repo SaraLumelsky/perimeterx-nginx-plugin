@@ -108,16 +108,22 @@ NOTE: Using the default NGINX provide by default in various Operating Systems do
 ### <a name="ubuntu1404"></a>Ubuntu 14.04
 The following steps must be done in order. If NOT, you will need to uninstall and start over at Step 1. 
 
-###### 1. Add the offical NGINX repository to get the latest version of NGINX
-```sh
-sudo add-apt-repository ppa:nginx/stable
-```
-
-###### 2. Install the dependencies for Ubuntu 14.04: 
+###### 1. Upgrade and update your existing dependencies for Ubuntu 16.04 or higher
 ```sh
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install software-properties-common
+```
+
+###### 2. Add the offical NGINX repository to get the latest version of NGINX
+```sh 
+sudo add-apt-repository ppa:nginx/stable
+```
+  If an `add-apt-repository: command not found` error is returned, run:
+ 
+  `sudo apt-get -y install software-properties-common`
+
+###### 3. Install the dependencies for Ubuntu 14.04: 
+```sh
 sudo apt-get -y install build-essential
 sudo apt-get -y install ca-certificates
 sudo apt-get -y install make
@@ -129,7 +135,7 @@ sudo apt-get -y install lua-cjson
 sudo apt-get -y install luarocks
 ```
 
-###### 3. Download and install Netttle 3.3 from source 
+###### 4. Download and install Netttle 3.3 from source 
 ```sh
 wget https://ftp.gnu.org/gnu/nettle/nettle-3.3.tar.gz
 tar -xzf nettle-3.3.tar.gz
@@ -139,29 +145,36 @@ sudo make clean && sudo make install
 cd ~
 ```
 
-###### 4. Install the PerimeterX NGINX Plugin
-```sh
-sudo luarocks install perimeterx-nginx-plugin
-```
-
 ###### 5. Install remaining dependencies
 ```sh
 sudo apt-get -y install lua-sec
 sudo luarocks install lua-resty-nettle
 ```
-##
-### <a name="ubuntu1604"></a>Ubuntu 16.04 or greater
 
-###### 1. Add the offical NGINX repository to get the latest version of NGINX
-```sh 
-sudo add-apt-repository ppa:nginx/stable
+###### 6. Install the PerimeterX NGINX Plugin
+```sh
+sudo luarocks install perimeterx-nginx-plugin
 ```
 
-###### 2. Install the dependencies for Ubuntu 16.04 or Greater
+##
+### <a name="ubuntu1604"></a>Ubuntu 16.04 and Higher
+
+###### 1. Upgrade and update your existing dependencies for Ubuntu 16.04 or higher
 ```sh
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get -y install software-properties-common
+```
+
+###### 2. Add the offical NGINX repository to get the latest version of NGINX
+```sh 
+sudo add-apt-repository ppa:nginx/stable
+```
+  If an `add-apt-repository: command not found` error is returned, run:
+ 
+  `sudo apt-get -y install software-properties-common`
+
+###### 3. Install the dependencies for Ubuntu 16.04 or higher
+```sh
 sudo apt-get -y install build-essential
 sudo apt-get -y install ca-certificates
 sudo apt-get -y install nginx
@@ -174,7 +187,7 @@ sudo apt-get -y install luajit
 sudo apt-get -y install libluajit-5.1-dev
 ```
 
-###### 3. Install the PerimeterX NGINX Plugin
+###### 4. Install the PerimeterX NGINX Plugin
 ```sh
 luarocks install perimeterx-nginx-plugin
 ```
